@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'homepage_state.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -8,14 +10,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Number Game",
-      /*
       home: ChangeNotifierProvider(
-        // TODO: add create attribute
+        create: (_) => HomePageState(),
         child: HomePage()
       ),
 
-       */
-      home: HomePage(),
     );
   }
 }
@@ -23,21 +22,53 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final homePageState = Provider.of<HomePageState>(context, listen: true);
     return Scaffold(
       appBar: AppBar(title: Text("Number Game")),
       body: Container(
         padding: EdgeInsets.all(50.0),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("ANSWER", style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: 100),
-              TextFormField(
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-              ),
-            ],
+          child: Form(
+            key: homePageState.formKey,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // TODO: return result
+                Text(homePageState.subNum.toString(), style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
+                SizedBox(height: 100),
+                TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Put some text";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      // TODO: make error handring do validator
+                      try {
+                        homePageState.setSubNum(int.parse(value));
+                      } catch (exception) {
+                        homePageState.setSubNum(0);
+                      }
+                    },
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.number,
+                  ),
+                RaisedButton(
+                  child: Text("Submit"),
+                  textColor: Colors.white,
+                  color: Colors.indigo,
+                  onPressed: () {
+                    FormState _formState = homePageState.formKey.currentState;
+                    if (_formState.validate()) {
+                      // TODO: check ans
+                      print("saved!");
+                      _formState.save();
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
