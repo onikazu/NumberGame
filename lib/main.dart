@@ -64,9 +64,9 @@ class SubmitForm extends StatelessWidget {
         onSaved: (value) {
           // TODO: make error handring do validator
           try {
-            homePageState.setSubNum(int.parse(value));
+            homePageState.submit(int.parse(value));
           } catch (exception) {
-            homePageState.setSubNum(0);
+            homePageState.submit(100);
           }
         },
         textAlign: TextAlign.center,
@@ -81,7 +81,6 @@ class SubmitButton extends StatelessWidget {
     final homePageState = Provider.of<HomePageState>(context, listen: false);
     FormState _formState = homePageState.formKey.currentState;
     if (_formState.validate()) {
-      // TODO: check ans
       print("saved!");
       _formState.save();
     }
@@ -91,7 +90,7 @@ class SubmitButton extends StatelessWidget {
       builder: (_) {
         return AlertDialog(
           title: Text("Result"),
-          content: Text("HIT: 3\nBITE: 0"),
+          content: Text("ANS: ${homePageState.ansNum}\nHIT: ${homePageState.hitNum}\nBITE: 0"),
           actions: <Widget>[
             FlatButton(
               child: Text("Cancel"),
