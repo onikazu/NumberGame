@@ -28,47 +28,27 @@ class HomePage extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(50.0),
         child: Center(
-          child: Form(
-            key: homePageState.formKey,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // TODO: return result
-                Text(homePageState.subNum.toString(), style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
-                SizedBox(height: 100),
-                TextFormField(
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return "Put some text";
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      // TODO: make error handring do validator
-                      try {
-                        homePageState.setSubNum(int.parse(value));
-                      } catch (exception) {
-                        homePageState.setSubNum(0);
-                      }
-                    },
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                  ),
-                RaisedButton(
-                  child: Text("Submit"),
-                  textColor: Colors.white,
-                  color: Colors.indigo,
-                  onPressed: () {
-                    FormState _formState = homePageState.formKey.currentState;
-                    if (_formState.validate()) {
-                      // TODO: check ans
-                      print("saved!");
-                      _formState.save();
-                    }
-                  },
-                ),
-              ],
-            ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // TODO: return result
+              Text(homePageState.subNum.toString(), style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
+              SizedBox(height: 100),
+              SubmitForm(errorMessage: "not good"),
+              RaisedButton(
+                child: Text("Submit"),
+                textColor: Colors.white,
+                color: Colors.indigo,
+                onPressed: () {
+                  FormState _formState = homePageState.formKey.currentState;
+                  if (_formState.validate()) {
+                    // TODO: check ans
+                    print("saved!");
+                    _formState.save();
+                  }
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -76,3 +56,34 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class SubmitForm extends StatelessWidget {
+  String errorMessage;
+
+  SubmitForm({this.errorMessage = "Put some text"});
+
+  @override
+  Widget build(BuildContext context) {
+    final homePageState = Provider.of<HomePageState>(context);
+    return Form(
+      key: homePageState.formKey,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return errorMessage;
+          }
+          return null;
+        },
+        onSaved: (value) {
+          // TODO: make error handring do validator
+          try {
+            homePageState.setSubNum(int.parse(value));
+          } catch (exception) {
+            homePageState.setSubNum(0);
+          }
+        },
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+      )
+    );
+  }
+}
