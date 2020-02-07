@@ -5,6 +5,7 @@ class HomePageState with ChangeNotifier {
   static var randomizer = new Random();
   final _formKey = GlobalKey<FormState>();
 
+  // TODO: remove comp num pattern
   int _ansNum = randomizer.nextInt(900) + 100;
   int _subNum = 0;
   int _hitNum = 0;
@@ -19,7 +20,7 @@ class HomePageState with ChangeNotifier {
   void submit(int num) {
     this._subNum = num;
     this._hitNum = checkHit(num);
-    // TODO: check bite
+    this._biteNum = checkBite(num);
 
     notifyListeners();
   }
@@ -61,5 +62,29 @@ class HomePageState with ChangeNotifier {
     tmp = this._subNum % 100;
     int subNumSecond = tmp ~/ 10;
     int subNumFirst = tmp % 10;
+
+    int result = 0;
+
+    if (ansNumFirst == subNumThird){
+      result++;
+    }
+    if (ansNumFirst == subNumSecond) {
+      result++;
+    }
+    print(result);
+    if (ansNumSecond == subNumThird) {
+      result++;
+    }
+    if (ansNumSecond == subNumFirst){
+      result++;
+    }
+    if (ansNumThird == subNumFirst) {
+      result++;
+    }
+    print(result);
+    if (ansNumThird == subNumSecond) {
+      result++;
+    }
+    return result;
   }
 }

@@ -55,6 +55,7 @@ class SubmitForm extends StatelessWidget {
     return Form(
       key: homePageState.formKey,
       child: TextFormField(
+        // TODO: validate num length and duplication.
         validator: (value) {
           if (value.isEmpty) {
             return errorMessage;
@@ -90,7 +91,7 @@ class SubmitButton extends StatelessWidget {
       builder: (_) {
         return AlertDialog(
           title: Text("Result"),
-          content: Text("ANS: ${homePageState.ansNum}\nHIT: ${homePageState.hitNum}\nBITE: 0"),
+          content: Text("ANS: ${homePageState.ansNum}\nHIT: ${homePageState.hitNum}\nBITE: ${homePageState.biteNum}"),
           actions: <Widget>[
             FlatButton(
               child: Text("Cancel"),
