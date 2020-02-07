@@ -1,6 +1,8 @@
-# number_game
+# NumberGame 
 
-A new Flutter project.
+## TODO
+[x] Implement goal page
+[ ] Implement battle mode
 
 ## Getting Started
 

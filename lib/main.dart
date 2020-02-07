@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:number_game/goal_page.dart';
 import 'package:provider/provider.dart';
 
 import 'homepage_state.dart';
@@ -8,10 +9,15 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Number Game",
-      home: ChangeNotifierProvider(
-          create: (_) => HomePageState(), child: HomePage()),
+    return ChangeNotifierProvider(
+      create: (_) => HomePageState(),
+      child: MaterialApp(
+        title: "Number Game",
+        home: HomePage(),
+        routes: <String, WidgetBuilder>{
+          '/goal': (BuildContext context) => GoalPage(),
+        },
+      ),
     );
   }
 }
@@ -101,26 +107,30 @@ class SubmitButton extends StatelessWidget {
       print("saved!");
       _formState.save();
       // TODO: return different screen if hitnum == 3
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text("Result"),
-            content: Text(
-                "HIT: ${homePageState.hitNum}\nBITE: ${homePageState.biteNum}"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Cancel"),
-                onPressed: () => Navigator.pop(context),
-              ),
-              FlatButton(
-                child: Text("OK"),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          );
-        },
-      );
+      if (homePageState.hitNum == 3) {
+        Navigator.pushReplacementNamed(context, "/goal");
+      } else {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: Text("Result"),
+              content: Text(
+                  "HIT: ${homePageState.hitNum}\nBITE: ${homePageState.biteNum}"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Cancel"),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
