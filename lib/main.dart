@@ -35,19 +35,7 @@ class HomePage extends StatelessWidget {
               Text(homePageState.subNum.toString(), style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
               SizedBox(height: 100),
               SubmitForm(errorMessage: "not good"),
-              RaisedButton(
-                child: Text("Submit"),
-                textColor: Colors.white,
-                color: Colors.indigo,
-                onPressed: () {
-                  FormState _formState = homePageState.formKey.currentState;
-                  if (_formState.validate()) {
-                    // TODO: check ans
-                    print("saved!");
-                    _formState.save();
-                  }
-                },
-              ),
+              SubmitButton(),
             ],
           ),
         ),
@@ -84,6 +72,51 @@ class SubmitForm extends StatelessWidget {
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
       )
+    );
+  }
+}
+
+class SubmitButton extends StatelessWidget {
+  void pressFunc(BuildContext context) {
+    final homePageState = Provider.of<HomePageState>(context, listen: false);
+    FormState _formState = homePageState.formKey.currentState;
+    if (_formState.validate()) {
+      // TODO: check ans
+      print("saved!");
+      _formState.save();
+    }
+    // TODO: change depends on result
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text("Result"),
+          content: Text("HIT: 3\nBITE: 0"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Text("Submit"),
+      textColor: Colors.white,
+      color: Colors.indigo,
+      // TODO: refactoring
+      onPressed: (){
+        pressFunc(context);
+      },
     );
   }
 }
