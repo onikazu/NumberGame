@@ -4,9 +4,18 @@ import 'dart:math';
 class HomePageState with ChangeNotifier {
   static var randomizer = new Random();
   final _formKey = GlobalKey<FormState>();
-
-  // TODO: remove comp num pattern
   int _ansNum = randomizer.nextInt(900) + 100;
+
+  // remove dup num pattern
+  HomePageState() {
+    while (true) {
+      this._ansNum = randomizer.nextInt(900) + 100;
+      if (checkBite(this._ansNum) == 0) {
+        break;
+      }
+    }
+  }
+
   int _subNum = 0;
   int _hitNum = 0;
   int _biteNum = 0;

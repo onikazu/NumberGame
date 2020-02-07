@@ -55,11 +55,26 @@ class SubmitForm extends StatelessWidget {
     return Form(
       key: homePageState.formKey,
       child: TextFormField(
-        // TODO: validate num length and duplication.
         validator: (value) {
+          int v_int = int.parse(value);
+
           if (value.isEmpty) {
             return errorMessage;
           }
+
+          if (v_int >= 1000 || v_int <= 99) {
+            return "you must input 3 digits";
+          }
+
+          int numThird = v_int ~/ 100;
+          int tmp = v_int % 100;
+          int numSecond = tmp ~/ 10;
+          int numFirst = tmp % 10;
+
+          if (numFirst == numSecond || numFirst == numThird || numSecond == numThird) {
+            return "you must input number without duplication";
+          }
+
           return null;
         },
         onSaved: (value) {
@@ -84,27 +99,27 @@ class SubmitButton extends StatelessWidget {
     if (_formState.validate()) {
       print("saved!");
       _formState.save();
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text("Result"),
+            content: Text("ANS: ${homePageState.ansNum}\nHIT: ${homePageState
+              .hitNum}\nBITE: ${homePageState.biteNum}"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: () => Navigator.pop(context),
+              ),
+              FlatButton(
+                child: Text("OK"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
     }
-    // TODO: change depends on result
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text("Result"),
-          content: Text("ANS: ${homePageState.ansNum}\nHIT: ${homePageState.hitNum}\nBITE: ${homePageState.biteNum}"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Cancel"),
-              onPressed: () => Navigator.pop(context),
-            ),
-            FlatButton(
-              child: Text("OK"),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
